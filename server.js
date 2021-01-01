@@ -34,7 +34,7 @@ app.post("/api/notes", function(req, res) {
     let noteContent = JSON.parse(fs.readFileSync(__dirname + "/db/db.json"));
     
     // Push the `req.body` to the array list
-    noteContent.push(newNote);    
+    noteContent.push(newNote);
 
     // JSON.stringify() the array list back into a JSON string
     fs.writeFileSync(__dirname + "/db/db.json", JSON.stringify(noteContent));

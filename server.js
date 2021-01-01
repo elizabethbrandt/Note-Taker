@@ -1,6 +1,7 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const {nanoid} = require("nanoid")
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,36 +14,42 @@ app.use(express.static('public'));
 app.get("/api/notes", function(req, res) {
 
     // Use the fs module to read the `db.json` file and parse it
-    const noteContent = JSON.parse(fs.readFileSync(__dirname + "/db/db.json"));
+    let noteContent = JSON.parse(fs.readFileSync(__dirname + "/db/db.json"))
 
-    // THEN send the parsed data back to the client with res.json()
+    // THEN send the parsed data back to the client with res.json()    
+    return res.json(noteContent);
+});
+
+app.post("/api/notes", function(req, res) {
+
+    // Access the posted data in `req.body`
+    const newNote = {
+        title: req.body.title,
+        text: req.body.text,
+        // Assign an id to the note
+        id: nanoid(),
+    };
+    
+    // Use the fs module to read the `db.json` file and parse response
+    let noteContent = JSON.parse(fs.readFileSync(__dirname + "/db/db.json"));
+    
+    // Push the `req.body` to the array list
+    noteContent.push(newNote);    
+
+    // JSON.stringify() the array list back into a JSON string
+    fs.writeFileSync(__dirname + "/db/db.json", JSON.stringify(noteContent));
+    
+    // THEN save the contents back to the `db.json` file with the fs module
     res.json(noteContent);
 
-})
+});
 
-// app.post("/api/notes", function(req, res) {
-
-//     // Access the posted data in `req.body`
-    
-//     // Use the fs module to read the `db.json` file
-//     fs.readFile("./db/db.json", "utf8")
-    
-//     // THEN parse the file contents with JSON.parse to get the real data
-    
-//     // Push the `req.body` to the array list
-
-//     // JSON.stringify() the array list back into a JSON string
-
-//     // THEN save the contents back to the `db.json` file with the fs module
-
-// })
 
 // app.delete("/api/notes/:id", function(req, res) {
 
 //     // Access the :id from `req.params.id`
     
 //     // Use the fs module to read the `db.json` file
-//     fs.readFile("./db/db.json", "utf8")
 
 //     // THEN parse the file contents with JSON.parse to get the real data
 

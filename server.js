@@ -45,25 +45,24 @@ app.post("/api/notes", function(req, res) {
 });
 
 
-// app.delete("/api/notes/:id", function(req, res) {
+app.delete("/api/notes/:id", function(req, res) {
 
-//     // Access the :id from `req.params.id`
+    // Access the :id from `req.params.id`
+    let noteId = req.params.id;
     
-//     // Use the fs module to read the `db.json` file
+    // Use the fs module to read the `db.json` file and parse
+    let noteContent = JSON.parse(fs.readFileSync(__dirname + "/db/db.json"));
 
-//     // THEN parse the file contents with JSON.parse to get the real data
+    // Use the array.filter() method to filter out the matching element
+    // myArray = myArray.filter(element => element.id !== req.params.id);
+    noteContent = noteContent.filter(note => note.id !== noteId);
+    
+    // Return any type of success message
+    console.log("Note deleted!");
 
-//     // OPTION A
-//         // Find the matching index using .findIndex() method
-//         // Remove the target element using the .splice() method
+    return res.send(fs.writeFileSync(__dirname + "/db/db.json", JSON.stringify(noteContent)));
 
-//     // OPTION B
-//         // Use the array.filter() method to filter out the matching element
-//         // myArray = myArray.filter(element => element.id !== req.params.id);
-
-//     // Return any type of success message
-
-// })
+})
 
 app.get("/notes", function(req, res) {
     
